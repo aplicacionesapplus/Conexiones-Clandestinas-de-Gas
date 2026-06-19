@@ -519,17 +519,23 @@
         <div class="field">
           <label>Sector <span class="req">*</span></label>
           <input type="text" id="sector" placeholder="S001500" maxlength="7" required>
+          <span class="err-msg" id="err-sector">Este campo es obligatorio.</span>
         </div>
         <div class="field">
           <label>Malla<span class="req">*</span></label>
           <input type="text" id="malla" placeholder="MA0001" maxlength="6" required>
+          <span class="err-msg" id="err-malla">Este campo es obligatorio.</span>
         </div>
       </div>
       <div class="field" style="margin-top:16px;">
         <label>Coordenadas<span class="req">*</span></label>
         <div class="coord-wrapper">
-          <div class="field"><label>Latitud</label><input type="text" id="latitud" placeholder="-12.046374" required></div>
-          <div class="field"><label>Longitud</label><input type="text" id="longitud" placeholder="-77.042793" required></div>
+          <div class="field"><label>Latitud</label><input type="text" id="latitud" placeholder="-12.046374" required>
+            <span class="err-msg" id="err-latitud">Este campo es obligatorio.</span>
+          </div>
+          <div class="field"><label>Longitud</label><input type="text" id="longitud" placeholder="-77.042793" required>
+            <span class="err-msg" id="err-longitud">Este campo es obligatorio.</span>
+          </div>
         </div>
       </div>
       <div style="margin-top:10px; text-align:right;">
@@ -548,6 +554,7 @@
             <div class="upload-label"><strong>Foto Gabinete</strong>Haz clic o arrastra una imagen</div>
             <img class="preview-img" id="prevGabinete" alt="Preview">
           </div>
+          <span class="err-msg" id="err-fotoGabinete">Esta foto es obligatoria.</span>
         </div>
         <div class="field">
           <label>Foto Panorámica</label>
@@ -557,6 +564,7 @@
             <div class="upload-label"><strong>Foto Panorámica</strong>Haz clic o arrastra una imagen</div>
             <img class="preview-img" id="prevPanoramica" alt="Preview">
           </div>
+          <span class="err-msg" id="err-fotoPanoramica">Esta foto es obligatoria.</span>
         </div>
       </div>
     </div>
@@ -853,18 +861,30 @@
   }
   function validate() {
     let ok = true;
-    ['fecha','dni','distrito','direccion'].forEach(id => {
+    ['fecha','dni','distrito','direccion','sector','malla','latitud','longitud'].forEach(id => {
       const el = document.getElementById(id);
       const err = document.getElementById('err-' + id);
       if (!el.value.trim()) { el.classList.add('invalid'); err.classList.add('show'); ok = false; }
       else { el.classList.remove('invalid'); err.classList.remove('show'); }
     });
+    ['fotoGabinete','fotoPanoramica'].forEach(id => {
+      const el = document.getElementById(id);
+      const err = document.getElementById('err-' + id);
+      if (!el.files || el.files.length === 0) { err.classList.add('show'); ok = false; }
+      else { err.classList.remove('show'); }
+    });
     return ok;
   }
 
-  ['fecha','dni','distrito','direccion'].forEach(id => {
+  ['fecha','dni','distrito','direccion','sector','malla','latitud','longitud'].forEach(id => {
     document.getElementById(id).addEventListener('input', () => {
       document.getElementById(id).classList.remove('invalid');
+      document.getElementById('err-' + id).classList.remove('show');
+    });
+  });
+
+  ['fotoGabinete','fotoPanoramica'].forEach(id => {
+    document.getElementById(id).addEventListener('change', () => {
       document.getElementById('err-' + id).classList.remove('show');
     });
   });
